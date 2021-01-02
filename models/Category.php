@@ -57,6 +57,11 @@ class Category extends ActiveRecord
     {
         return Category::find()->all();
     }
+    
+	public static function getOne($id)
+    {
+        return Category::findOne($id);
+    }
 
     public static function getArticlesByCategory($id)
     {

@@ -4,12 +4,12 @@ namespace app\controllers;
 
 use app\models\Article;
 use app\models\Category;
+use app\models\CommentForm;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
-use app\models\LoginForm;
 use app\models\ContactForm;
 
 class SiteController extends Controller
@@ -77,49 +77,57 @@ class SiteController extends Controller
         ]);
     }
 
-    public function actionView()
+    public function actionView($id)
     {
-        return $this->render('single');
+    	$article = Article::findOne($id);
+    	$popular = Article::getPopular();
+    	$recent = Article::getRecent();
+    	$categories = Category::getAll();
+    	$comments = $article->getArticleComments();
+    	$commentForm = new CommentForm();
+    	
+        return $this->render('single', [
+        	'article' => $article,
+			'popular'=>$popular,
+			'recent' => $recent,
+			'categories' => $categories,
+			'comments' => $comments,
+			'commentForm' => $commentForm,
+			
+		]);
     }
 
-    public function actionCategory()
+    public function actionCategory($id)
     {
-        return $this->render('category');
-    }
-
-
-    /**
-     * Login action.
-     *
-     * @return Response|string
-     */
-    public function actionLogin()
-    {
-        if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
-        }
-
-        $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
-        }
-
-        $model->password = '';
-        return $this->render('login', [
-            'model' => $model,
+    	$data = Category::getArticlesByCategory($id);
+    	$category = Category::getOne($id);
+    	$popular = Article::getPopular();
+    	$recent = Article::getRecent();
+    	$categories = Category::getAll();
+    	
+        return $this->render('category', [
+            'articles'=>$data['articles'],
+            'pagination'=>$data['pagination'],
+            'category' => $category,
+            'popular'=>$popular,
+			'recent' => $recent,
+			'categories'=>$categories
         ]);
     }
-
-    /**
-     * Logout action.
-     *
-     * @return Response
-     */
-    public function actionLogout()
+    
+    public function actionComment($id)
     {
-        Yii::$app->user->logout();
-
-        return $this->goHome();
+        $model = new CommentForm();
+        
+        if(Yii::$app->request->isPost)
+        {
+            $model->load(Yii::$app->request->post());
+            if($model->saveComment($id))
+            {
+                Yii::$app->getSession()->setFlash('comment', 'Ваш комментарий будет добавлен в ближайшее время!');
+                return $this->redirect(['site/view','id'=>$id]);
+            }
+        }
     }
 
     /**

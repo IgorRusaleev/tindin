@@ -20,6 +20,7 @@ use yii\helpers\ArrayHelper;
  * @property integer $user_id
  * @property integer $status
  * @property integer $category_id
+ * @property integer $tag_id
  *
  * @property ArticleTag[] $articleTags
  * @property Comment[] $comments

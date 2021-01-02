@@ -20,7 +20,7 @@ use yii\web\UploadedFile;
 class ArticleController extends Controller
 {
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function behaviors()
     {
@@ -53,7 +53,6 @@ class ArticleController extends Controller
      * Displays a single Article model.
      * @param integer $id
      * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionView($id)
     {
@@ -71,13 +70,13 @@ class ArticleController extends Controller
     {
         $model = new Article();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post()) && $model->saveArticle()) {
             return $this->redirect(['view', 'id' => $model->id]);
+        } else {
+            return $this->render('create', [
+                'model' => $model,
+            ]);
         }
-
-        return $this->render('create', [
-            'model' => $model,
-        ]);
     }
 
     /**
@@ -85,19 +84,18 @@ class ArticleController extends Controller
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        
+        if ($model->load(Yii::$app->request->post()) && $model->saveArticle()) {
             return $this->redirect(['view', 'id' => $model->id]);
+        } else {
+            return $this->render('update', [
+                'model' => $model,
+            ]);
         }
-
-        return $this->render('update', [
-            'model' => $model,
-        ]);
     }
 
     /**
@@ -105,7 +103,6 @@ class ArticleController extends Controller
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionDelete($id)
     {
@@ -125,16 +122,11 @@ class ArticleController extends Controller
     {
         if (($model = Article::findOne($id)) !== null) {
             return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
         }
-
-        throw new NotFoundHttpException('The requested page does not exist.');
     }
 
-    /**
-     * @param $id
-     * @return string|\yii\web\Response
-     * @throws NotFoundHttpException
-     */
     public function actionSetImage($id)
     {
         $model = new ImageUpload;
@@ -149,15 +141,10 @@ class ArticleController extends Controller
                 return $this->redirect(['view', 'id'=>$article->id]);
             }
         }
-
+        
         return $this->render('image', ['model'=>$model]);
     }
-
-    /**
-     * @param $id
-     * @return string|\yii\web\Response
-     * @throws NotFoundHttpException
-     */
+    
     public function actionSetCategory($id)
     {
         $article = $this->findModel($id);
@@ -180,11 +167,6 @@ class ArticleController extends Controller
         ]);
     }
 
-    /**
-     * @param $id
-     * @return string|\yii\web\Response
-     * @throws NotFoundHttpException
-     */
     public function actionSetTags($id)
     {
         $article = $this->findModel($id);
@@ -197,7 +179,7 @@ class ArticleController extends Controller
             $article->saveTags($tags);
             return $this->redirect(['view', 'id'=>$article->id]);
         }
-
+        
         return $this->render('tags', [
             'selectedTags'=>$selectedTags,
             'tags'=>$tags

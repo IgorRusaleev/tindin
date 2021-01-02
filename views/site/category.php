@@ -1,6 +1,18 @@
 <?php
+
+use app\models\Article;
+	use app\models\Category;
+	use yii\helpers\Html;
+use yii\helpers\StringHelper;
 use yii\helpers\Url;
 use yii\widgets\LinkPager;
+
+/** @var Article $articles */
+/** @var Article $pagination */
+/** @var Category $categories */
+/** @var Category $category */
+/** @var Article $popular */
+/** @var Article $recent */
 
 ?>
 <!--main content start-->
@@ -9,185 +21,58 @@ use yii\widgets\LinkPager;
         <div class="row">
             <div class="col-lg-9">
                 <div class="section-title">
-                    <span class="caption d-block small">Categories</span>
-                    <h2>Politics</h2>
+                    <span class="caption d-block small">Категория</span>
+                    <h2><?= Html::encode($category->title); ?></h2>
                 </div>
-                <div class="post-entry-2 d-flex">
-                    <div class="thumbnail order-md-2" style="background-image: url('/public/images/img_h_4.jpg')"></div>
-                    <div class="contents order-md-1 pl-0">
-                        <h2><a href="blog-single.html">News Needs to Meet Its Audiences Where They Are</a></h2>
-                        <p class="mb-3">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eligendi temporibus praesentium neque, voluptatum quam quibusdam.</p>
-                        <div class="post-meta">
-                            <span class="d-block"><a href="#">Dave Rogers</a> in <a href="#">News</a></span>
-                            <span class="date-read">Jun 14 <span class="mx-1">&bullet;</span> 3 min read <span class="icon-star2"></span></span>
+                <?php foreach ($articles as $article): ?>
+                    <div class="post-entry-2 d-flex">
+                        <div class="thumbnail order-md-2" style="background-image: url('<?= Html::encode($article->getImage()); ?>')"></div>
+                        <div class="contents order-md-1 pl-0">
+                            <h2><a href="<?= Url::toRoute(['site/view', 'id'=>$article->id]);?>"><?= Html::encode($article->title); ?></a></h2>
+                            <p class="mb-3">
+                                <?= StringHelper::truncate($article->description,256) ?>
+                                <a href="<?= Url::toRoute(['site/view', 'id'=>$article->id]);?>" class="more-link">Читать далее<span class="icon-keyboard_arrow_right"></span></a>
+                            </p>
+                            <div class="post-meta">
+                                <span class="d-block">
+                                    <a href="#"><?= $article->author->name?></a> в категории <a href="<?= Url::toRoute(['site/category','id'=>$article->category->id])?>">
+                                        <?= Html::encode($article->category->title); ?>
+                                    </a>
+                                </span>
+                                <span class="date-read"><?= Html::encode($article->getDate()); ?> <span class="mx-1">&bullet;</span> 3 min read <span class="icon-star2"></span>
+                                    <?php if ($article->viewed > 0): ?>
+                                        Количество просмотров: <?= (int) Html::encode($article->viewed); ?>
+
+                                    <?php endif; ?>
+                                </span>
+                            </div>
                         </div>
                     </div>
-                </div>
-
-                <div class="post-entry-2 d-flex">
-                    <div class="thumbnail order-md-2" style="background-image: url('/public/images/img_h_3.jpg')"></div>
-                    <div class="contents order-md-1 pl-0">
-                        <h2><a href="blog-single.html">News Needs to Meet Its Audiences Where They Are</a></h2>
-                        <p class="mb-3">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eligendi temporibus praesentium neque, voluptatum quam quibusdam.</p>
-                        <div class="post-meta">
-                            <span class="d-block"><a href="#">Dave Rogers</a> in <a href="#">News</a></span>
-                            <span class="date-read">Jun 14 <span class="mx-1">&bullet;</span> 3 min read <span class="icon-star2"></span></span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="post-entry-2 d-flex">
-                    <div class="thumbnail order-md-2" style="background-image: url('/public/images/img_h_1.jpg')"></div>
-                    <div class="contents order-md-1 pl-0">
-
-                        <h2><a href="blog-single.html">News Needs to Meet Its Audiences Where They Are</a></h2>
-                        <p class="mb-3">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eligendi temporibus praesentium neque, voluptatum quam quibusdam.</p>
-                        <div class="post-meta">
-                            <span class="d-block"><a href="#">Dave Rogers</a> in <a href="#">News</a></span>
-                            <span class="date-read">Jun 14 <span class="mx-1">&bullet;</span> 3 min read <span class="icon-star2"></span></span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="post-entry-2 d-flex">
-                    <div class="thumbnail order-md-2" style="background-image: url('/public/images/img_h_4.jpg')"></div>
-                    <div class="contents order-md-1 pl-0">
-                        <h2><a href="blog-single.html">News Needs to Meet Its Audiences Where They Are</a></h2>
-                        <p class="mb-3">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eligendi temporibus praesentium neque, voluptatum quam quibusdam.</p>
-                        <div class="post-meta">
-                            <span class="d-block"><a href="#">Dave Rogers</a> in <a href="#">News</a></span>
-                            <span class="date-read">Jun 14 <span class="mx-1">&bullet;</span> 3 min read <span class="icon-star2"></span></span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="post-entry-2 d-flex">
-                    <div class="thumbnail order-md-2" style="background-image: url('/public/images/img_h_3.jpg')"></div>
-                    <div class="contents order-md-1 pl-0">
-                        <h2><a href="blog-single.html">News Needs to Meet Its Audiences Where They Are</a></h2>
-                        <p class="mb-3">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eligendi temporibus praesentium neque, voluptatum quam quibusdam.</p>
-                        <div class="post-meta">
-                            <span class="d-block"><a href="#">Dave Rogers</a> in <a href="#">News</a></span>
-                            <span class="date-read">Jun 14 <span class="mx-1">&bullet;</span> 3 min read <span class="icon-star2"></span></span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="post-entry-2 d-flex">
-                    <div class="thumbnail order-md-2" style="background-image: url('/public/images/img_h_1.jpg')"></div>
-                    <div class="contents order-md-1 pl-0">
-
-                        <h2><a href="blog-single.html">News Needs to Meet Its Audiences Where They Are</a></h2>
-                        <p class="mb-3">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eligendi temporibus praesentium neque, voluptatum quam quibusdam.</p>
-                        <div class="post-meta">
-                            <span class="d-block"><a href="#">Dave Rogers</a> in <a href="#">News</a></span>
-                            <span class="date-read">Jun 14 <span class="mx-1">&bullet;</span> 3 min read <span class="icon-star2"></span></span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="post-entry-2 d-flex">
-                    <div class="thumbnail order-md-2" style="background-image: url('/public/images/img_h_4.jpg')"></div>
-                    <div class="contents order-md-1 pl-0">
-                        <h2><a href="blog-single.html">News Needs to Meet Its Audiences Where They Are</a></h2>
-                        <p class="mb-3">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eligendi temporibus praesentium neque, voluptatum quam quibusdam.</p>
-                        <div class="post-meta">
-                            <span class="d-block"><a href="#">Dave Rogers</a> in <a href="#">News</a></span>
-                            <span class="date-read">Jun 14 <span class="mx-1">&bullet;</span> 3 min read <span class="icon-star2"></span></span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="post-entry-2 d-flex">
-                    <div class="thumbnail order-md-2" style="background-image: url('/public/images/img_h_3.jpg')"></div>
-                    <div class="contents order-md-1 pl-0">
-                        <h2><a href="blog-single.html">News Needs to Meet Its Audiences Where They Are</a></h2>
-                        <p class="mb-3">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eligendi temporibus praesentium neque, voluptatum quam quibusdam.</p>
-                        <div class="post-meta">
-                            <span class="d-block"><a href="#">Dave Rogers</a> in <a href="#">News</a></span>
-                            <span class="date-read">Jun 14 <span class="mx-1">&bullet;</span> 3 min read <span class="icon-star2"></span></span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="post-entry-2 d-flex">
-                    <div class="thumbnail order-md-2" style="background-image: url('/public/images/img_h_1.jpg')"></div>
-                    <div class="contents order-md-1 pl-0">
-
-                        <h2><a href="blog-single.html">News Needs to Meet Its Audiences Where They Are</a></h2>
-                        <p class="mb-3">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eligendi temporibus praesentium neque, voluptatum quam quibusdam.</p>
-                        <div class="post-meta">
-                            <span class="d-block"><a href="#">Dave Rogers</a> in <a href="#">News</a></span>
-                            <span class="date-read">Jun 14 <span class="mx-1">&bullet;</span> 3 min read <span class="icon-star2"></span></span>
-                        </div>
-                    </div>
-                </div>
+                <?php endforeach; ?>
             </div>
-            <div class="col-lg-3">
-                <div class="section-title">
-                    <h2>Popular Posts</h2>
-                </div>
+            
+            <?= $this->render('/partials/sidebar', [
+                'popular'=>$popular,
+                'recent'=>$recent,
+                'categories'=>$categories
+            ]);?>
+            
 
-                <div class="trend-entry d-flex">
-                    <div class="number align-self-start">01</div>
-                    <div class="trend-contents">
-                        <h2><a href="blog-single.html">News Needs to Meet Its Audiences Where They Are</a></h2>
-                        <div class="post-meta">
-                            <span class="d-block"><a href="#">Dave Rogers</a> in <a href="#">News</a></span>
-                            <span class="date-read">Jun 14 <span class="mx-1">&bullet;</span> 3 min read <span class="icon-star2"></span></span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="trend-entry d-flex">
-                    <div class="number align-self-start">02</div>
-                    <div class="trend-contents">
-                        <h2><a href="blog-single.html">News Needs to Meet Its Audiences Where They Are</a></h2>
-                        <div class="post-meta">
-                            <span class="d-block"><a href="#">Dave Rogers</a> in <a href="#">News</a></span>
-                            <span class="date-read">Jun 14 <span class="mx-1">&bullet;</span> 3 min read <span class="icon-star2"></span></span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="trend-entry d-flex">
-                    <div class="number align-self-start">03</div>
-                    <div class="trend-contents">
-                        <h2><a href="blog-single.html">News Needs to Meet Its Audiences Where They Are</a></h2>
-                        <div class="post-meta">
-                            <span class="d-block"><a href="#">Dave Rogers</a> in <a href="#">News</a></span>
-                            <span class="date-read">Jun 14 <span class="mx-1">&bullet;</span> 3 min read <span class="icon-star2"></span></span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="trend-entry d-flex pl-0">
-                    <div class="number align-self-start">04</div>
-                    <div class="trend-contents">
-                        <h2><a href="blog-single.html">News Needs to Meet Its Audiences Where They Are</a></h2>
-                        <div class="post-meta">
-                            <span class="d-block"><a href="#">Dave Rogers</a> in <a href="#">News</a></span>
-                            <span class="date-read">Jun 14 <span class="mx-1">&bullet;</span> 3 min read <span class="icon-star2"></span></span>
-                        </div>
-                    </div>
-                </div>
-
-                <p>
-                    <a href="#" class="more">See All Popular <span class="icon-keyboard_arrow_right"></span></a>
-                </p>
-            </div>
         </div>
 
-        <div class="row">
             <div class="col-lg-6">
-                <ul class="custom-pagination list-unstyled">
-                    <li><a href="#">1</a></li>
-                    <li class="active">2</li>
-                    <li><a href="#">3</a></li>
-                    <li><a href="#">4</a></li>
-                </ul>
+                <nav aria-label="Page navigation example">
+                    <?php
+                        echo LinkPager::widget([
+                            'pagination' => $pagination,
+                            //Css option for container
+                            'options' => ['class' => 'custom-pagination list-unstyled'],
+                            //Current Active option value
+                            'activePageCssClass' => 'active',
+                        ]);
+                    ?>
+                </nav>
             </div>
-        </div>
     </div>
 </div>
 <!-- end main content-->

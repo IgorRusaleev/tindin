@@ -65,10 +65,24 @@ PublicAsset::register($this);
                 </div>
                 <div class="col-6 d-block d-lg-none text-right"></div>
             </div>
+            <ul class="nav justify-content-end">
+                        <?php if(Yii::$app->user->isGuest):?>
+                            <li class="nav-item"><a class="nav-link" href="<?= Url::toRoute(['auth/login'])?>">Авторизоваться</a></li>
+                            <li class="nav-item"><a class="nav-link" href="<?= Url::toRoute(['auth/signup'])?>">Зарегистрироваться</a></li>
+                        <?php else: ?>
+                            
+                            <?= Html::beginForm(['/auth/logout'], 'post') . Html::submitButton(
+                                            'Выйти (' . Yii::$app->user->identity->name . ')',
+                                            ['class' => 'btn btn-link logout', 'style'=>"padding-top:10px;"]
+                            ) . Html::endForm() ?>
+                            
+                        <?php endif;?>
+            </ul>
         </div>
 
         <div class="site-navbar py-2 js-sticky-header site-navbar-target d-none pl-0 d-lg-block" role="banner">
             <div class="container">
+
                 <div class="d-flex align-items-center">
                     <div class="mr-auto">
                         <nav class="site-navigation position-relative text-right" role="navigation">
@@ -82,20 +96,6 @@ PublicAsset::register($this);
                                        aria-expanded="false">Категории</a>
                                     <?= CategoriesWidget::widget(); ?>
                                 </li>
-                                <li class="nav-item">
-                                    <a href="<?= Yii::$app->urlManager->createUrl(['site/view']); ?>" class="nav-link text-left">Politics</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="<?= Yii::$app->urlManager->createUrl(['site/view']); ?>" class="nav-link text-left">Business</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="<?= Yii::$app->urlManager->createUrl(['site/view']); ?>" class="nav-link text-left">Health</a>
-                                </li>
-                                <li class="nav-item"><a href="<?= Yii::$app->urlManager->createUrl(['site/view']); ?>" class="nav-link text-left">Design</a></li>
-                                <li class="nav-item">
-                                    <a href="<?= Yii::$app->urlManager->createUrl(['site/view']); ?>" class="nav-link text-left">Sport</a>
-                                </li>
-                                <li class="nav-item"><a href="<?= Yii::$app->urlManager->createUrl(['site/view']); ?>" class="nav-link text-left">Contact</a></li>
                             </ul>
                         </nav>
                     </div>
